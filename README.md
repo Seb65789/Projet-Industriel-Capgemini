@@ -5,6 +5,11 @@
 ### Branche dev
   La branche "dev" est relié à "main", elle sert a rassembler les fichiers des autres branches qui lui sont ratachées. 
   Sur cette branche nous rassemblerons "PERCLOS", "EAR/MAR" , "HOP" et "EBS", afin de proposer un script utilisant chacune des fonctionnalités pour construire notre projet.
+  Pour ajouter le contenue d'une branche d'une des caractéristiques à la branche "dev" il faut faire:
+  ```bash
+  git checkout dev # Se placer sur la branche dev
+  gti merge caracteristique # Ajouter son travail à la branche dev 
+  ```
 
 ### Branche EAR/MAR
   Ceci est la branche destinée au code pour les caractéristiques EAR/MAR.
