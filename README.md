@@ -38,7 +38,7 @@
   ```
 
 ### Branche PERCLOS
-Ÿ
+
   Ceci est la branche destinée au code pour la caractéristiques PERCLOS.
   Pour ajouter vos modificatinos au git, il faut d'abord être sur la bonne branche, en faisant :
   ```bash
