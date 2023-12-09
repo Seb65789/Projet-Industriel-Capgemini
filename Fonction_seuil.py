@@ -1,6 +1,6 @@
 import numpy as np
-import matplotlib as plt
 
+# On initialise la premiere valeure seuil a 0.25
 # On teste la valeur courante par rapport a une liste mise a jour toutes les t secondes.
 def F_seuil(val_EAR,list_EAR):
     ferme = False
