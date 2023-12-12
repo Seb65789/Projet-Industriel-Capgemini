@@ -111,7 +111,7 @@ while cap.isOpened():
             # Dessiner le texte indiquant l'EAR et le MAR sur l'image
             cv2.putText(frame, f'EAR: {ear:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             cv2.putText(frame, f'MAR: {mar:.2f}', (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-
+            print(frame, blink)
             # Vérifier la somnolence en comparant l'EAR au seuil
             if F_seuil(ear,ear_list) == True:
                 if count == 3:
