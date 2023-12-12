@@ -17,7 +17,7 @@
   ```bash
   git checkout EAR/MAR
   git add les_fichiers
-  git commit -m "Un message résumant bien les changement"
+  git commit -m "Un message résumant bien les changements"
   git push origin EAR/MAR
   ```
 
@@ -27,7 +27,7 @@
   ```bash
   git checkout HOP
   git add les_fichiers
-  git commit -m "Un message résumant bien les changement"
+  git commit -m "Un message résumant bien les changements"
   git push origin HOP
   ```
 
@@ -38,7 +38,7 @@
   ```bash
   git checkout EBS
   git add les_fichiers
-  git commit -m "Un message résumant bien les changement"
+  git commit -m "Un message résumant bien les changements"
   git push origin EBS
   ```
 
@@ -49,6 +49,6 @@
   ```bash
   git checkout PERCLOS
   git add les_fichiers
-  git commit -m "Un message résumant bien les changement"
+  git commit -m "Un message résumant bien les changements"
   git push origin PERCLOS
   ```
