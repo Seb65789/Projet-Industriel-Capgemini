@@ -52,3 +52,16 @@
   git commit -m "Un message résumant bien les changements"
   git push origin PERCLOS
   ```
+
+### Branche environnement
+
+  Branche destinée à accueillir les fichiers de configuration de l'environnement virtuel.
+  Pour créer un environnement virtuel, utiliser les fichiers suivants :
+  - env_create.bat (Windows)
+  - env_create.sh (Linux)
+
+Pour entrer/sortir de l'environnement virtuel créé, utiliser la commande :
+```bash
+conda activate python311 # Entrer dans l'environnement virtuel
+conda deactivate python311 # Sortir de l'environnement virtuel
+```
