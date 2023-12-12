@@ -3,9 +3,6 @@ import mediapipe as mp
 import numpy as np
 import time
 
-# Ajoutez cette ligne pour spécifier la version de numpy
-import numpy as np
-
 # On teste la valeur courante par rapport a une liste mise a jour toutes les t secondes.
 def F_seuil(val_EAR,list_EAR):
     ferme = False
@@ -43,7 +40,7 @@ face_mesh = mp_face_mesh.FaceMesh()
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
 # Charger la vidéo
-video_path = 'kss#8-9#F#rldd#28-10.mp4_12.mp4'
+video_path = 'kss#8-9#F#rldd#28-10.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # Initialiser des listes pour stocker les données
