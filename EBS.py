@@ -40,7 +40,7 @@ face_mesh = mp_face_mesh.FaceMesh()
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
 # Charger la vidéo
-video_path = 'kss#1-3#F#rldd#10-0.mp4'
+video_path = 'kss#8-9#F#rldd#28-10.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # Initialiser des listes pour stocker les données
