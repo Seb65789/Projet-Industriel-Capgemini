@@ -2,3 +2,4 @@ conda env create -f requirements.yml
 conda activate python311
 pip install opencv-python
 pip install mediapipe
+pip install pandas
