@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from Fonction_seuil import F_seuil
 
 # Fonctions EAR et MAR
 def eye_aspect_ratio(eye):
@@ -26,7 +25,7 @@ video_paths = [name + '.mp4' for name in video_names]
 # Créer une liste video_files avec les noms de fichiers modifiés
 video_files = [name + '_landmarks.csv' for name in video_names]
 
-signes = ["EAR_left","EAR_right", "EAR_mean","MAR","PERCLOS"]
+signes = ["EAR_left","EAR_right", "EAR_mean","MAR"]
 
 # Initialiser l'entête du data_frame
 columns = ['Nom_video']
@@ -64,14 +63,13 @@ for video_name in video_names:
         EAR_right = eye_aspect_ratio(eye_coordinates_right)
         EAR_mean = (EAR_left+EAR_right)/2
         MAR = mouth_aspect_ratio(mouth_coordinates)
-        # TEST Fonction F_seuil
-        F_seuil(EAR_left,df_final[0:30])
-        print()
+
         # Ajouter la valeur EAR à la colonne correspondante dans df_final
         df_final.at[video_name, f'EAR_left_{frame}'] = EAR_left
         df_final.at[video_name, f'EAR_right_{frame}'] = EAR_right
         df_final.at[video_name, f'EAR_mean_{frame}'] = EAR_mean
         df_final.at[video_name, f'MAR_{frame}'] = MAR
+
 
 
 print(df_final)
