@@ -34,8 +34,10 @@ for video_file in video_files:
     df = pd.read_csv(video_file)
     taille_premiere_colonne = len(df.iloc[:, 0])
 
-for signe in signes:
-    for frame in range(taille_premiere_colonne):  # Supposant 876 frames par vidéo
+
+
+for frame in range(taille_premiere_colonne):  # Supposant 876 frames par vidéo
+    for signe in signes:
         columns.append(f'{signe}_{frame}')
 
 # Créer le DataFrame final
