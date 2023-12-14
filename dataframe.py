@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-from Perclos import perclos
-from Fonction_seuil import F_seuil
 
 # Fonctions EAR et MAR
 def eye_aspect_ratio(eye):
@@ -66,16 +64,11 @@ for video_name in video_names:
         EAR_mean = (EAR_left+EAR_right)/2
         MAR = mouth_aspect_ratio(mouth_coordinates)
 
-        
-        
-
         # Ajouter la valeur EAR à la colonne correspondante dans df_final
         df_final.at[video_name, f'EAR_left_{frame}'] = EAR_left
         df_final.at[video_name, f'EAR_right_{frame}'] = EAR_right
         df_final.at[video_name, f'EAR_mean_{frame}'] = EAR_mean
         df_final.at[video_name, f'MAR_{frame}'] = MAR
-
-        print(F_seuil(EAR_left,df_final.iloc[video_name, -30:]))
 
 
 
