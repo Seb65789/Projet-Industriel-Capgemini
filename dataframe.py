@@ -22,7 +22,7 @@ def F_seuil(val_EAR,list_EAR):
     ferme = False
     max = np.max(list_EAR)
     min = np.min(list_EAR)
-    f_seuil = max - min/2  
+    f_seuil = (max - min)/2  
     if val_EAR < f_seuil :
         ferme = True
     else :
@@ -94,6 +94,7 @@ for video_name in video_names:
         df_final.at[video_name, f'EAR_mean_{frame}'] = EAR_mean
         df_final.at[video_name, f'MAR_{frame}'] = MAR
 
+        #print(ear_list)
         ear_list.append(EAR_mean)
 
         # Vérifier la somnolence en comparant l'EAR au seuil -> EBS
