@@ -22,7 +22,7 @@ def F_seuil(val_EAR,list_EAR):
     ferme = False
     max = np.max(list_EAR)
     min = np.min(list_EAR)
-    f_seuil = (max - min)/2  
+    f_seuil = (max + min)/2  
     if val_EAR < f_seuil :
         ferme = True
     else :
