@@ -23,8 +23,8 @@ def process_video(video_path):
     landmarks_all_frames = []
 
     # Définir les noms de colonnes
-    left_eye_columns = [f"left_eye_{i}" for i in [463, 385, 387, 263, 373, 380]]
-    right_eye_columns = [f"right_eye_{i}" for i in [133, 158, 160, 33, 144, 153]]
+    left_eye_columns = [f"left_eye_{i}" for i in [263, 387, 385, 326, 380, 373]]
+    right_eye_columns = [f"right_eye_{i}" for i in [33, 160, 158, 133, 153, 144]]
     mouth_columns = [f"mouth_{i}" for i in [78, 82, 312, 308, 317, 87]]
     head_columns = [f"head_{i}" for i in [10, 152]] 
 
