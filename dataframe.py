@@ -7,7 +7,6 @@ def eye_aspect_ratio(eye):
     B = np.linalg.norm(np.array(eval(eye.iloc[2])) - np.array(eval(eye.iloc[4])))
     C = np.linalg.norm(np.array(eval(eye.iloc[0])) - np.array(eval(eye.iloc[3])))
     ear = (A + B) / (2.0 * C)
-    
     return ear
 
 def mouth_aspect_ratio(mouth):
