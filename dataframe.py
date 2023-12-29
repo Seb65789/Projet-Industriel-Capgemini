@@ -54,6 +54,9 @@ for video_file in video_files:
     df = pd.read_csv(video_file)
     taille_premiere_colonne = len(df.iloc[:, 0])
 
+for frame in range(taille_premiere_colonne):  # Supposant 876 frames par vidéo
+    for signe in signes:
+        columns.append(f'{signe}_{frame}')
 for signe in signes:
     if signe == "EBS":
         for frame in range(0, taille_premiere_colonne, 25):  # Add columns only for multiples of 25
