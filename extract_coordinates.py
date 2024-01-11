@@ -23,8 +23,8 @@ def process_video(video_path):
     landmarks_all_frames = []
 
     # Définir les noms de colonnes
-    left_eye_columns = [f"left_eye_{i}" for i in [263, 387, 385, 326, 380, 373]]
-    right_eye_columns = [f"right_eye_{i}" for i in [33, 160, 158, 133, 153, 144]]
+    left_eye_columns = [f"left_eye_{i}" for i in [362, 385, 386, 387, 263, 373, 374, 380]]
+    right_eye_columns = [f"right_eye_{i}" for i in [133, 158, 159, 160, 33, 144, 145, 153]]
     mouth_columns = [f"mouth_{i}" for i in [78, 82, 312, 308, 317, 87]]
     head_columns = [f"head_{i}" for i in [10, 152]] 
 
@@ -54,8 +54,8 @@ def process_video(video_path):
         if faces.multi_face_landmarks:
             for face_landmarks in faces.multi_face_landmarks:
                 # Extraire les coordonnées des points des yeux et de la bouche
-                left_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [263, 387, 385, 326, 380, 373]]
-                right_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [33, 160, 158, 133, 153, 144]]
+                left_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [362, 385, 386, 387, 263, 373, 374, 380]]
+                right_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [133, 158, 159, 160, 33, 144, 145, 153]]
                 mouth_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [78, 82, 312, 308, 317, 87]]
                 head_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [10, 152]]
                 
@@ -87,7 +87,7 @@ def process_video(video_path):
 
 
 # Liste des vidéos à traiter
-video_paths = ['kss#1-3#F#rldd#10-0.mp4', 'kss#8-9#F#rldd#28-10.mp4']
+video_paths = ['kss#1-3#F#rldd#10-0.mp4', 'kss#8-9#F#rldd#28-10.mp4','test_aurelie.mp4']
 
 # Traiter chaque vidéo
 for video_path in video_paths:

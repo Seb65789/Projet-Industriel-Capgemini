@@ -3,10 +3,13 @@ import numpy as np
 
 # Fonctions EAR et MAR
 def eye_aspect_ratio(eye):
-    A = np.linalg.norm(np.array(eval(eye[1])) - np.array(eval(eye[5])))
-    B = np.linalg.norm(np.array(eval(eye[2])) - np.array(eval(eye[4])))
-    C = np.linalg.norm(np.array(eval(eye[0])) - np.array(eval(eye[3])))
-    ear = (A + B) / (2.0 * C)
+    A = np.linalg.norm(np.array(eval(eye[3])) - np.array(eval(eye[5])))
+    B = np.linalg.norm(np.array(eval(eye[2])) - np.array(eval(eye[6])))
+    C = np.linalg.norm(np.array(eval(eye[1])) - np.array(eval(eye[7])))
+    D = np.linalg.norm(np.array(eval(eye[4])) - np.array(eval(eye[0])))
+
+    
+    ear = (A + B + C) / (3.0 * D)
     return ear
 
 def mouth_aspect_ratio(mouth):
@@ -18,7 +21,7 @@ def mouth_aspect_ratio(mouth):
 
 # Charger les données à partir des fichiers CSV
 # Liste des vidéos à traiter
-video_names = ['kss#8-9#F#rldd#28-10','kss#1-3#F#rldd#10-0']
+video_names = ['kss#8-9#F#rldd#28-10','kss#1-3#F#rldd#10-0', 'test_aurelie']
 
 video_paths = [name + '.mp4' for name in video_names]
 
@@ -55,8 +58,8 @@ for video_name in video_names:
 
     # Calculer l'EAR pour chaque œil et ajouter les valeurs à df_final
     for frame in range(len(df)):
-        eye_coordinates_left = df.loc[frame, ['left_eye_463', 'left_eye_385', 'left_eye_387', 'left_eye_263', 'left_eye_373', 'left_eye_380']]
-        eye_coordinates_right = df.loc[frame, ['right_eye_133','right_eye_158','right_eye_160','right_eye_33','right_eye_144','right_eye_153']]
+        eye_coordinates_left = df.loc[frame, ['left_eye_362', 'left_eye_385','left_eye_386', 'left_eye_387', 'left_eye_263', 'left_eye_373', 'left_eye_374', 'left_eye_380']]
+        eye_coordinates_right = df.loc[frame, ['right_eye_133', 'right_eye_158', 'right_eye_159','right_eye_160','right_eye_33','right_eye_144', 'right_eye_145','right_eye_153']]
         mouth_coordinates = df.loc[frame, ['mouth_78','mouth_82','mouth_312', 'mouth_308','mouth_317','mouth_87']]
         
         EAR_left = eye_aspect_ratio(eye_coordinates_left)
