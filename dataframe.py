@@ -59,7 +59,7 @@ print(df_final)
 # Parcourir chaque fichier vidéo
 for video_name in video_names:
     print("Traitement en cours pour : ", video_name)
-    i=i+1
+
     # Charger le CSV
     df = pd.read_csv('./csv_videos/' + video_name[9:-4] + '_landmarks.csv')
 
@@ -79,15 +79,15 @@ for video_name in video_names:
 
         # Ajouter les valeurs à la liste
         values.extend([EAR_left, EAR_right, EAR_mean, MAR])
-    
-# ...
 
     # Ajouter des zéros pour égaler les longueurs
     values += [0] * (len(df_final.columns) - len(values))
 
-    df_final.loc[video_name_without_extension, df_final.columns] = values
-    df_final = df_final.fillna(0)
+    # Ajouter la nouvelle ligne au DataFrame
+    df_final.loc[len(df_final)] = values
 
+# Remplacer NaN par 0 dans le DataFrame final
+df_final = df_final.fillna(0)
 
 # Enregistrez le DataFrame final dans un fichier CSV
 df_final.to_csv('resultat_final.csv', index=False)

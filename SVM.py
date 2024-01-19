@@ -26,6 +26,10 @@ caract_colonnes = [f"EAR_left_{x}" for x in range(1, 875)] + \
 # Nos caractéristiques
 X = df[caract_colonnes]
 # Nos étiquettes 
+# Définir les plages KSS pour chaque niveau de somnolence
+df['niveau_somnolence'] = pd.cut(df['KSS'], bins=bins, labels=labels).astype(str)
+
+# Nos étiquettes 
 y = df['niveau_somnolence']
 
 # Suppression des NaN dans les données
