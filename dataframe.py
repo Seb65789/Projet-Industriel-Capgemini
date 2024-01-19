@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import save_video 
 from rm_NaN_file import rm_NaN
+import os
 
 # Fonctions EAR et MAR
 def eye_aspect_ratio(eye):
@@ -55,22 +56,15 @@ for frame in range(taille_premiere_colonne):  # Supposant 876 frames par vidéo
 df_final = pd.DataFrame(columns=columns)
 print(df_final)
 
-
-# Parcourir chaque fichier vidéo
-# ...
-
 # Parcourir chaque fichier vidéo
 for video_name in video_names:
     print("Traitement en cours pour : ", video_name)
-
+    i=i+1
     # Charger le CSV
     df = pd.read_csv('./csv_videos/' + video_name[9:-4] + '_landmarks.csv')
 
-   # Récupérer le nom de la vidéo à partir du nom du fichier
-    df_final.loc[video_name, 'Nom_video'] = video_name[9:-4]
-
     # Initialiser une liste pour stocker les valeurs
-    values = []
+    values = [video_name[9:-4]]
 
     # Calculer l'EAR pour chaque œil et ajouter les valeurs à la liste
     for frame in range(len(df)):
@@ -85,15 +79,15 @@ for video_name in video_names:
 
         # Ajouter les valeurs à la liste
         values.extend([EAR_left, EAR_right, EAR_mean, MAR])
+    
+# ...
 
-    # Ajuster la longueur de la liste values pour qu'elle ait la même longueur que le nombre de colonnes dans df_final
+    # Ajouter des zéros pour égaler les longueurs
     values += [0] * (len(df_final.columns) - len(values))
 
-    # Ajouter la liste des valeurs au DataFrame final et remplir les valeurs manquantes avec 0
-    df_final.loc[video_name] = values
+    df_final.loc[video_name_without_extension, df_final.columns] = values
     df_final = df_final.fillna(0)
 
-# ...
 
 # Enregistrez le DataFrame final dans un fichier CSV
 df_final.to_csv('resultat_final.csv', index=False)
