@@ -4,6 +4,5 @@
 ./videos/kss#1-3#F#rldd#02-0.mp4_1.mp4
 ./videos/kss#1-3#F#rldd#10-0.mp4
 ./videos/test_aurelie.mp4
-./videos/kss#6-7#F#rldd#06-5.mp4_7.mp4
 ./videos/kss#1-3#F#rldd#01-0.mp4_5.mp4
 ./videos/kss#1-3#F#rldd#01-0.mp4_1.mp4

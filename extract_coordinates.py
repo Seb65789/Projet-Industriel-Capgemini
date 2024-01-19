@@ -74,8 +74,9 @@ def process_video(video_path):
             break
     
     # Si les vidéos font plus de 875 frames, on supprime les frames en plus
-    if len(landmarks_all_frames) > 875 :
+    if len(landmarks_all_frames) > 875:
         landmarks_all_frames = landmarks_all_frames[:875]
+
     print(len(landmarks_all_frames))
 
     # En dehors de la boucle, écrire les coordonnées dans le fichier CSV
