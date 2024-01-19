@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import csv
 import os
+import save_video
 
 # Ajoutez cette ligne pour spécifier la version de numpy
 import numpy as np; np_version = np.__version__.split('.')
@@ -23,14 +24,14 @@ def process_video(video_path):
     landmarks_all_frames = []
 
     # Définir les noms de colonnes
-    left_eye_columns = [f"left_eye_{i}" for i in [263, 387, 385, 326, 380, 373]]
-    right_eye_columns = [f"right_eye_{i}" for i in [33, 160, 158, 133, 153, 144]]
+    left_eye_columns = [f"left_eye_{i}" for i in [362, 385, 386, 387, 263, 373, 374, 380]]
+    right_eye_columns = [f"right_eye_{i}" for i in [133, 158, 159, 160, 33, 144, 145, 153]]
     mouth_columns = [f"mouth_{i}" for i in [78, 82, 312, 308, 317, 87]]
     head_columns = [f"head_{i}" for i in [10, 152]] 
 
     # Créer le fichier CSV et écrire l'en-tête
     video_name = os.path.splitext(os.path.basename(video_path))[0]
-    csv_file_path = f"{video_name}_landmarks.csv"
+    csv_file_path = f"./csv_videos/{video_name}_landmarks.csv"
     with open(csv_file_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         # Écrire l'en-tête du fichier CSV avec toutes les colonnes
@@ -38,10 +39,10 @@ def process_video(video_path):
 
     # Charger la vidéo
     cap = cv2.VideoCapture(video_path)
-
     # Lecture de la vidéo
     while cap.isOpened():
         ret, frame = cap.read()
+
         if not ret:
             break
 
@@ -54,8 +55,8 @@ def process_video(video_path):
         if faces.multi_face_landmarks:
             for face_landmarks in faces.multi_face_landmarks:
                 # Extraire les coordonnées des points des yeux et de la bouche
-                left_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [263, 387, 385, 326, 380, 373]]
-                right_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [33, 160, 158, 133, 153, 144]]
+                left_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [362, 385, 386, 387, 263, 373, 374, 380]]
+                right_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [133, 158, 159, 160, 33, 144, 145, 153]]
                 mouth_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [78, 82, 312, 308, 317, 87]]
                 head_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [10, 152]]
                 
@@ -71,6 +72,12 @@ def process_video(video_path):
         # Arrêter la boucle si la touche 'q' est pressée
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+    
+    # Si les vidéos font plus de 875 frames, on supprime les frames en plus
+    if len(landmarks_all_frames) > 875:
+        landmarks_all_frames = landmarks_all_frames[:875]
+
+    print(len(landmarks_all_frames))
 
     # En dehors de la boucle, écrire les coordonnées dans le fichier CSV
     with open(csv_file_path, mode='a', newline='') as file:
@@ -86,10 +93,10 @@ def process_video(video_path):
     cv2.destroyAllWindows()
 
 
-# Liste des vidéos à traiter
-video_paths = ['kss#1-3#F#rldd#10-0.mp4', 'kss#8-9#F#rldd#28-10.mp4']
+# Liste des vidéos à traiter (récupérer grâce à une liste)
+video_paths = save_video.get_videos('./videos','noms_videos.txt')
 
 # Traiter chaque vidéo
-for video_path in video_paths:
-    process_video(video_path)
+for video in video_paths:
+    process_video(video)
 print("Terminé")
