@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 import save_video 
 from rm_NaN_file import rm_NaN
-import os
+from perclos import perclos
+import random
 
 # Fonctions EAR et MAR
 def eye_aspect_ratio(eye):
@@ -48,7 +49,7 @@ videos_csv = [f'./csv_videos/{name[9:-4]}_landmarks.csv' for name in video_names
 
 
 
-signes = ["EAR_left","EAR_right", "EAR_mean","MAR", "HOP_dg", "HOP_hb"]
+signes = ["EAR_left","EAR_right", "EAR_mean","MAR", "HOP_dg", "HOP_hb","Ferme","PERCLOS"]
 
 # Initialiser l'entête du data_frame
 columns = ['Nom_video']
@@ -76,10 +77,12 @@ for video_name in video_names:
 
     # Initialiser une liste pour stocker les valeurs
     values = [video_name[9:-4]]
-
+    compteur_ferme = 0
+    print(len(df))
+    
     # Calculer l'EAR pour chaque œil et ajouter les valeurs à la liste
-    for frame in range(len(df)):
-        eye_coordinates_left = df.loc[frame, ['left_eye_362', 'left_eye_385','left_eye_386', 'left_eye_387', 'left_eye_263', 'left_eye_373', 'left_eye_374', 'left_eye_380']]
+    for frame in range(len(df)) :
+        eye_coordinates_left = df.loc[frame, ['left_eye_362', 'left_eye_385','left_eye_386', 'left_eye_387','left_eye_263', 'left_eye_373', 'left_eye_374', 'left_eye_380']]
         eye_coordinates_right = df.loc[frame, ['right_eye_133', 'right_eye_158', 'right_eye_159','right_eye_160','right_eye_33','right_eye_144', 'right_eye_145','right_eye_153']]
         mouth_coordinates = df.loc[frame, ['mouth_78','mouth_82','mouth_312', 'mouth_308','mouth_317','mouth_87']]
         head_coordinates = df.loc[frame, ['head_10', 'head_152']]
@@ -87,11 +90,18 @@ for video_name in video_names:
         EAR_left = eye_aspect_ratio(eye_coordinates_left)
         EAR_right = eye_aspect_ratio(eye_coordinates_right)
         EAR_mean = (EAR_left + EAR_right) / 2
+        #  Choisis un booléen de manière aléatoire avec une porbabilité de choisir True de 30%
+        ferme = random.random() < 0.3
+
+        if ferme == True :
+            compteur_ferme = compteur_ferme+1
+        
         MAR = mouth_aspect_ratio(mouth_coordinates)
         HOP_dg, HOP_hb = hop(head_coordinates)
+        PERCLOS = perclos(compteur_ferme,frame+1)
 
         # Ajouter les valeurs à la liste
-        values.extend([EAR_left, EAR_right, EAR_mean, MAR, HOP_dg, HOP_hb])
+        values.extend([EAR_left, EAR_right, EAR_mean, MAR, HOP_dg, HOP_hb, ferme, PERCLOS])
 
     # Ajouter des zéros pour égaler les longueurs
     values += [0] * (len(df_final.columns) - len(values))
@@ -104,3 +114,4 @@ df_final = df_final.fillna(0)
 
 # Enregistrez le DataFrame final dans un fichier CSV
 df_final.to_csv('resultat_final.csv', index=False)
+
