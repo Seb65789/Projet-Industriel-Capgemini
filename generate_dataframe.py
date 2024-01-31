@@ -136,14 +136,14 @@ nb_frame_ferme = 0;
 # On crée une liste avec les noms des colonnes
 liste_colonnes = ["video_name"]
 for i in range(875):
-    liste_colonnes.append("MAR_{}".format(i))
-    liste_colonnes.append("EAR_left_{}".format(i))
-    liste_colonnes.append("EAR_right_{}".format(i))
+    #liste_colonnes.append("MAR_{}".format(i))
+    #liste_colonnes.append("EAR_left_{}".format(i))
+    # liste_colonnes.append("EAR_right_{}".format(i))
     liste_colonnes.append("EAR_moyen_{}".format(i))
-    liste_colonnes.append("HOP_gd_{}".format(i))
-    liste_colonnes.append("HOP_hb_{}".format(i))
-    liste_colonnes.append("EBR_{}".format(i))
-    liste_colonnes.append("PERCLOS_{}".format(i))
+    # liste_colonnes.append("HOP_gd_{}".format(i))
+    # liste_colonnes.append("HOP_hb_{}".format(i))
+    # liste_colonnes.append("EBR_{}".format(i))
+    # liste_colonnes.append("PERCLOS_{}".format(i))
 
 # Define right eye, left eye, and mouth landmark positions
 right_eye = [[33, 133], [160, 144], [159, 145], [158, 153]]
@@ -188,29 +188,29 @@ for video_path in video_paths:
         mar, ear_left, ear_right, ear_moyen, hop_gd, hop_hb, image = run_face_mp(image)
         
 
-        nouvelle_ligne.append(mar)
-        nouvelle_ligne.append(ear_left)
-        nouvelle_ligne.append(ear_right)
+        # nouvelle_ligne.append(mar)
+        # nouvelle_ligne.append(ear_left)
+        # nouvelle_ligne.append(ear_right)
         nouvelle_ligne.append(ear_moyen)
-        nouvelle_ligne.append(hop_gd)
-        nouvelle_ligne.append(hop_hb)
+        # nouvelle_ligne.append(hop_gd)
+        # nouvelle_ligne.append(hop_hb)
 
         # si le numéro de frame actuel est un multiple de FREQUENCE_EBR on ebre prend blink counter on reinitialise le blink counter et on continue
         if cap.get(cv2.CAP_PROP_POS_FRAMES) % FREQUENCE_EBR == 0:
-            nouvelle_ligne.append(blink_count)
+            # nouvelle_ligne.append(blink_count)
             blink_count = 0
             # ajouter à l'écran " Blink count enregistré"
             cv2.putText(image, "Blink count enregistré", (20, 150),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
             perclos = (nb_frame_ferme/(FREQUENCE_EBR - nb_frame_ferme))*100
-            nouvelle_ligne.append(perclos)
+            # nouvelle_ligne.append(perclos)
             nb_frame_ferme = 0
             
-        else:
+        #else:
             #EBR à -1
-            nouvelle_ligne.append(-1)
+            #nouvelle_ligne.append(-1)
             #PERCLOS à -1
-            nouvelle_ligne.append(-1)
+            #nouvelle_ligne.append(-1)
 
         # Display blink count on screen
         cv2.putText(image, "Blink: {}".format(blink_count), (10, 120),
