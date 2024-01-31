@@ -103,7 +103,7 @@ for video_name in video_names:
             EAR_list.append(EAR_mean) 
             ferme = EAR_mean < 0.2
         else :
-            ferme = EAR_mean < np.mean(np.array(EAR_list))*0.9
+            ferme = EAR_mean < np.mean(np.array(EAR_list))
             # On enlève le plus ancien élément
             EAR_list.pop(0)
             # On rajoute le nouveau
