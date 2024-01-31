@@ -14,6 +14,7 @@ if int(np_version[0]) < 1 or (int(np_version[0]) == 1 and int(np_version[1]) < 2
 # Charger le modèle Mediapipe pour la détection des yeux et des lèvres
 mp_face_mesh = mp.solutions.face_mesh
 mp_drawing = mp.solutions.drawing_utils
+ 
 
 def process_video(video_path):
     # Initialiser le détecteur de visage et le dessinateur pour les annotations
@@ -24,8 +25,8 @@ def process_video(video_path):
     landmarks_all_frames = []
 
     # Définir les noms de colonnes
-    left_eye_columns = [f"left_eye_{i}" for i in [362, 385, 386, 387, 263, 373, 374, 380]]
-    right_eye_columns = [f"right_eye_{i}" for i in [133, 158, 159, 160, 33, 144, 145, 153]]
+    left_eye_columns = [f"left_eye_{i}" for i in [263, 387, 385, 362, 380, 373]]
+    right_eye_columns = [f"right_eye_{i}" for i in [133, 158, 160, 33, 144, 153, 144]]
     mouth_columns = [f"mouth_{i}" for i in [78, 82, 312, 308, 317, 87]]
     head_columns = [f"head_{i}" for i in [10, 152]] 
 
@@ -39,39 +40,41 @@ def process_video(video_path):
 
     # Charger la vidéo
     cap = cv2.VideoCapture(video_path)
-    # Lecture de la vidéo
-    while cap.isOpened():
-        ret, frame = cap.read()
 
-        if not ret:
-            break
+    with mp_face_mesh.FaceMesh(min_detection_confidence=0.5,min_tracking_confidence=0.5) as face_mesh :
 
-        # Convertir l'image en niveaux de gris
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Lecture de la vidéo
+        while cap.isOpened():
+            ret, frame = cap.read()
 
-        # Détecter les visages dans l'image
-        faces = face_mesh.process(frame)
+            if not ret:
+                break
 
-        if faces.multi_face_landmarks:
-            for face_landmarks in faces.multi_face_landmarks:
-                # Extraire les coordonnées des points des yeux et de la bouche
-                left_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [362, 385, 386, 387, 263, 373, 374, 380]]
-                right_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [133, 158, 159, 160, 33, 144, 145, 153]]
-                mouth_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [78, 82, 312, 308, 317, 87]]
-                head_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [10, 152]]
-                
-                # Ajouter les coordonnées aux listes respectives
-                landmarks_all_frames.append(left_eye_landmarks + right_eye_landmarks + mouth_landmarks +head_landmarks)
+            # Convertir l'image en RGB pour améliorer la précision de Mediapipe
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-                # Dessiner les points des yeux sur l'image
-                mp_drawing.draw_landmarks(frame, face_landmarks, mp_face_mesh.FACEMESH_CONTOURS, landmark_drawing_spec=drawing_spec)
+            # Détecter les visages dans l'image
+            faces = face_mesh.process(frame)
 
-        # Afficher la vidéo
-        cv2.imshow('Video', frame)
+            if faces.multi_face_landmarks:
+                for face_landmarks in faces.multi_face_landmarks:
+                    # Extraire les coordonnées des points des yeux et de la bouche
+                    left_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [263, 387, 385, 362, 380, 373]]
+                    right_eye_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y,face_landmarks.landmark[i].z] for i in [133, 158, 160, 33, 144, 153, 144]]
+                    mouth_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [78, 82, 312, 308, 317, 87]]
+                    head_landmarks = [[face_landmarks.landmark[i].x, face_landmarks.landmark[i].y, face_landmarks.landmark[i].z] for i in [10, 152]]
+                    # Ajouter les coordonnées aux listes respectives
+                    landmarks_all_frames.append(left_eye_landmarks + right_eye_landmarks + mouth_landmarks +head_landmarks)
 
-        # Arrêter la boucle si la touche 'q' est pressée
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+                    # Dessiner les points des yeux sur l'image
+                    mp_drawing.draw_landmarks(frame, face_landmarks, mp_face_mesh.FACEMESH_CONTOURS, landmark_drawing_spec=drawing_spec)
+
+            # Afficher la vidéo
+            cv2.imshow('Video', frame)
+
+            # Arrêter la boucle si la touche 'q' est pressée
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
     
     # Si les vidéos font plus de 875 frames, on supprime les frames en plus
     if len(landmarks_all_frames) > 875:

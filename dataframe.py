@@ -5,21 +5,24 @@ from rm_NaN_file import rm_NaN
 from perclos import perclos
 import random
 
+def distance(p1, p2):
+    p1 = np.array(p1)
+    p2 = np.array(p2)
+    return ((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2+(p1[2]-p2[2])**2)**0.5
+
 # Fonctions EAR et MAR
 def eye_aspect_ratio(eye):
-    A = np.linalg.norm(np.array(eval(eye[3])) - np.array(eval(eye[5])))
-    B = np.linalg.norm(np.array(eval(eye[2])) - np.array(eval(eye[6])))
-    C = np.linalg.norm(np.array(eval(eye[1])) - np.array(eval(eye[7])))
-    D = np.linalg.norm(np.array(eval(eye[4])) - np.array(eval(eye[0])))
-
-    
-    ear = (A + B + C) / (3.0 * D)
+    A = distance(eval(eye.iloc[1]),eval(eye.iloc[4]))
+    B = distance(eval(eye.iloc[2]),eval(eye.iloc[5]))
+    C = distance(eval(eye.iloc[0]),eval(eye.iloc[3]))
+    ear = (A + B) / (2.0 * C)
     return ear
 
 def mouth_aspect_ratio(mouth):
-    A = np.linalg.norm(np.array(eval(mouth.iloc[1])) - np.array(eval(mouth.iloc[5])))
-    B = np.linalg.norm(np.array(eval(mouth.iloc[2])) - np.array(eval(mouth.iloc[4])))
-    C = np.linalg.norm(np.array(eval(mouth.iloc[0])) - np.array(eval(mouth.iloc[3])))
+    A = distance(np.array(eval(mouth.iloc[1])),np.array(eval(mouth.iloc[5])))
+    B = distance(np.array(eval(mouth.iloc[2])),np.array(eval(mouth.iloc[4])))
+    C = distance(np.array(eval(mouth.iloc[0])),np.array(eval(mouth.iloc[3])))
+
     mar = (A + B) / (2.0 * C)
     return mar
 
@@ -27,9 +30,9 @@ def calculate_angle(x,y) :
     return(-np.abs(np.arctan2(y,x)*180/np.pi)+180)
 
 def hop(head):
-    x = np.array(eval(head[0]))[0] - np.array(eval(head[1]))[0]
-    y = np.array(eval(head[0]))[1] - np.array(eval(head[1]))[1]
-    z = np.array(eval(head[0]))[2] - np.array(eval(head[1]))[2]
+    x = np.array(eval(head.iloc[0]))[0] - np.array(eval(head.iloc[1]))[0]
+    y = np.array(eval(head.iloc[0]))[1] - np.array(eval(head.iloc[1]))[1]
+    z = np.array(eval(head.iloc[0]))[2] - np.array(eval(head.iloc[1]))[2]
     angle_hb = calculate_angle(y,x)
     angle_gd = calculate_angle(z,y)
     return angle_gd, angle_hb
@@ -79,19 +82,34 @@ for video_name in video_names:
     values = [video_name[9:-4]]
     compteur_ferme = 0
     print(len(df))
+    # Liste des EAR pour un seuil adaptatif
+    EAR_list = []
     
     # Calculer l'EAR pour chaque œil et ajouter les valeurs à la liste
     for frame in range(len(df)) :
-        eye_coordinates_left = df.loc[frame, ['left_eye_362', 'left_eye_385','left_eye_386', 'left_eye_387','left_eye_263', 'left_eye_373', 'left_eye_374', 'left_eye_380']]
-        eye_coordinates_right = df.loc[frame, ['right_eye_133', 'right_eye_158', 'right_eye_159','right_eye_160','right_eye_33','right_eye_144', 'right_eye_145','right_eye_153']]
+        eye_coordinates_left = df.loc[frame, ['left_eye_263','left_eye_387','left_eye_385','left_eye_362','left_eye_380','left_eye_373']]
+        eye_coordinates_right = df.loc[frame, ['right_eye_133','right_eye_158','right_eye_160','right_eye_33','right_eye_144','right_eye_153','right_eye_144']]
         mouth_coordinates = df.loc[frame, ['mouth_78','mouth_82','mouth_312', 'mouth_308','mouth_317','mouth_87']]
         head_coordinates = df.loc[frame, ['head_10', 'head_152']]
         
         EAR_left = eye_aspect_ratio(eye_coordinates_left)
         EAR_right = eye_aspect_ratio(eye_coordinates_right)
         EAR_mean = (EAR_left + EAR_right) / 2
-        #  Choisis un booléen de manière aléatoire avec une porbabilité de choisir True de 30%
-        ferme = random.random() < 0.3
+
+        EAR_list.append(EAR_mean)
+
+
+        if frame <25 :
+            EAR_list.append(EAR_mean) 
+            ferme = EAR_mean < 0.2
+        else :
+            ferme = EAR_mean < np.mean(np.array(EAR_list))*0.9
+            # On enlève le plus ancien élément
+            EAR_list.pop(0)
+            # On rajoute le nouveau
+            EAR_list.append(EAR_mean)
+        
+            
 
         if ferme == True :
             compteur_ferme = compteur_ferme+1
