@@ -109,7 +109,6 @@ for video_name in video_names:
             # On rajoute le nouveau
             EAR_list.append(EAR_mean)
         
-            
 
         if ferme == True :
             compteur_ferme = compteur_ferme+1
