@@ -19,7 +19,7 @@ video_paths = [os.path.join("videos", video) for video in video_paths]
 
 # Declare FaceMesh model
 mp_face_mesh = mp.solutions.face_mesh
-face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.8,min_tracking_confidence=0.2)
+face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5,min_tracking_confidence=0.5)
 
 # Le dessin du facemesh
 mp_drawing = mp.solutions.drawing_utils
@@ -66,8 +66,8 @@ for video_path in video_paths:
                 for landmark_id in list_points_no_tuples:
                 # Accéder aux coordonnées x, y et z du landmark spécifique
                     data_point = face_landmarks.landmark[landmark_id]
-                    nouvelle_ligne.append(data_point.x)
-                    nouvelle_ligne.append(data_point.y)
+                    nouvelle_ligne.append(data_point.x * frame.shape[1])
+                    nouvelle_ligne.append(data_point.y * frame.shape[0]) 
                     nouvelle_ligne.append(data_point.z)
 
         frame_count +=1

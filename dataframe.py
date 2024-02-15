@@ -50,8 +50,6 @@ video_names = save_video.get_videos('./videos','noms_videos')
 # On ajoute le chemin vers le dossier des csv
 videos_csv = [f'./csv_videos/{name[9:-4]}_landmarks.csv' for name in video_names]
 
-
-
 signes = ["EAR_left","EAR_right", "EAR_mean","MAR", "HOP_dg", "HOP_hb","Ferme","PERCLOS"]
 
 # Initialiser l'entête du data_frame
@@ -103,7 +101,7 @@ for video_name in video_names:
             EAR_list.append(EAR_mean) 
             ferme = EAR_mean < 0.2
         else :
-            ferme = EAR_mean < np.mean(np.array(EAR_list))
+            ferme = EAR_mean < 0.9*np.mean(np.array(EAR_list))
             # On enlève le plus ancien élément
             EAR_list.pop(0)
             # On rajoute le nouveau
