@@ -2,6 +2,7 @@ from EAR import eye_aspect_ratio
 from MAR import mouth_aspect_ratio
 from hop import hop
 from perclos import perclos
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -18,8 +19,9 @@ def calculs_signes(list_points) :
     # Compteur de yeux fermés
     compteur_ferme = 0
     # Compteur de yeux fermés reinitialisé toutes les 5 secondes
-    compteur_ferme_EBR = 0
+    list_clignement = []
     eyes_state = "open"
+    list_ebr = []
     for i in range(1,len(list_points),8*3+2) :
 
 # Extraction des points ==================================================================================================================
@@ -36,7 +38,9 @@ def calculs_signes(list_points) :
         hop_hb , hop_gd = hop(head_coord) 
         ear_mean = (ear_right + ear_left)/2
         
-        # Sur la première seconde on crée la liste
+        # Seuil adaptatif =========================================================================================== 
+
+        # Sur la première seconde 
         if compt_frame <25 :
             ear_list.append(ear_mean) 
             ferme = ear_mean < 0.2
@@ -49,31 +53,41 @@ def calculs_signes(list_points) :
             ear_list.pop(0)
             # On rajoute le nouveau
             ear_list.append(ear_mean)
+            # À chaque frame on enlève le premier élement de la liste de la premiere seconde à la fin 
+            list_clignement.pop(0)
 
+        # ============================================================================================================
+
+        # Détection des clignements ================================================================================
+            
         # Si sur l'image actuel, les yeux sont considérés comme fermés alors on augmente le compteur 
         if ferme == True :
             compteur_ferme = compteur_ferme+1
             # si l'oeil était ouvert au début alors on compte un clignement
             if eyes_state == "open":
-                    eyes_state = "closed"
-                    compteur_ferme_EBR +=1
-            # Si l'oeil était déjà fermé
+                eyes_state = "closed"
+                # On ajoute le dernier élément
+                list_clignement.append(1)
+            
+            # Si l'oeil était déjà fermé on ne compte pas un clignement de plus
+            else :
+                # On ajoute le dernier élément
+                list_clignement.append(0)
+        
+        # Si l'oeil est considéré comme ouvert
         else:
             eyes_state = "open"
+            # On ajoute le dernier élément
+            list_clignement.append(0)
 
+        # ==========================================================================================================
         
         # Calcul du perclos
         Perclos = perclos(compteur_ferme,compt_frame+1)
-        if compt_frame ==874 :
-            print("Perclos :",Perclos)
 
-        # Calcul EBR, Eye-Blik Rate (fréquence toutes les 5 du nombre de ferme)
-        if(compt_frame+1)%125==0 :
-            ebr = compteur_ferme_EBR
-            compteur_ferme_EBR = 0
-            
-        else :
-            ebr= -1
+        # Calcul de l'EBR
+        ebr = np.sum(list_clignement)
+        list_ebr.append(ebr)
         
 #==========================================================================================================================================
         # On incrémente le compteur de frame
@@ -89,10 +103,8 @@ def calculs_signes(list_points) :
         res.append(Perclos)
         res.append(hop_gd)
         res.append(hop_hb)
-        
-            
     
-    return res
+    return res, list_ebr
 
 # Ouverture du dataframe des coordonnées 
 df_coordinates = pd.read_csv("csv_videos/videos_coordinates.csv")
@@ -107,14 +119,15 @@ for i in range(875) :
 # Ouverture du dataframe des résultats
 df = pd.DataFrame(columns = list_col)
 
+
 # Parcourir les lignes
 for ligne in range(df_coordinates.shape[0]):
     # Extraire le nom de la vidéo
     video_name = df_coordinates.iloc[ligne, 0]
 
     # Initialiser une liste pour stocker le nom de la vidéo et les coordonnées de cette ligne
-    video_and_coordinates = [video_name]
-    print(f"Processing {video_name}...")
+    video_and_coordinates = [video_name[7:]]
+    print(f"Processing {video_name[7:]}...")
 
     # On itère sur les colonnes
     for i in range(1, df_coordinates.shape[1], 3):
@@ -125,43 +138,25 @@ for ligne in range(df_coordinates.shape[0]):
         video_and_coordinates.append(point_coordinates)
     
     # Maintenant que nous avons nos points, nous pouvons calculer les signes et les ajouter au dataframe
-    results = calculs_signes(video_and_coordinates)
+    results, list_ebr = calculs_signes(video_and_coordinates)
     
-
+    # Créez une nouvelle figure à chaque itération
+    plt.figure()
+    plt.plot(list_ebr)
+    plt.title(f'Evolution des EBR pour {video_name[7:]}')
+    plt.xlabel('Frames')
+    plt.ylabel('Valeur EBR')
+    plt.grid(True)
+    plt.ylim(0, 7)
+    # Sauvegardez le plot avec un nom de fichier unique
+    plt.savefig(f"EBR_{video_name[7:]}.png")
 
     # Créer une liste avec le nom de la vidéo, les coordonnées et les résultats des signes
     row_data = [video_and_coordinates[0]] + results
 
     df.loc[len(df)] = row_data
 
-import pandas as pd
-
-# Créer un MultiIndex pour le DataFrame temporaire
-iterables = [[i for i in range(0, 875)], ["EAR_left", "EAR_right", "EAR_mean", "MAR", "Ferme","EBR", "PERCLOS", "HOP_gd", "HOP_hb"]]
-df_temp_index = pd.MultiIndex.from_product(iterables, names=["frame", "sign"])
-
-# Créer un DataFrame temporaire avec les index multi-niveaux
-data_temp = pd.DataFrame(columns=df_temp_index)
-
-# Ajouter une colonne pour les noms de vidéos
-data_temp["nom_video"] = ""
-
-# Parcourir les lignes du DataFrame d'origine
-for index, row in df.iterrows():
-    video_name = row["nom_video"]
-    # Ajouter le nom de la vidéo comme valeur dans la colonne "nom_video" pour chaque ligne
-    data_temp.loc[index, "nom_video"] = video_name
-    # Parcourir les colonnes et ajouter les valeurs correspondantes au DataFrame temporaire
-    for i in range(0, 875):
-        for sign in ["EAR_left", "EAR_right", "EAR_mean", "MAR", "Ferme","EBR", "PERCLOS", "HOP_gd", "HOP_hb"]:
-            col_name = f"{sign}_{i}"
-            data_temp.loc[index, (i, sign)] = row[col_name]
-
-
-# Afficher le DataFrame temporaire
-print(data_temp)
-
-# Convertir le DataFrame en fichier CSV
-data_temp.to_csv('csv_videos/résultats.csv', index=False)
+df.to_csv('csv_videos/résultats.csv', index=False)
+print(df)
 
 print("Terminé !")
