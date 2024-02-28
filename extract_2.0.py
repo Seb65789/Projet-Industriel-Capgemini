@@ -51,7 +51,7 @@ for video_path in video_paths:
     while cap.isOpened():
         ret, frame = cap.read()
 
-        if not ret or frame_count == 876:
+        if not ret or frame_count == 875:
             break
 
         # Convertir l'image en RGB pour améliorer la précision de Mediapipe
@@ -82,7 +82,9 @@ for video_path in video_paths:
 
 # Convertir le DataFrame en fichier CSV
 df.to_csv('csv_videos/videos_coordinates.csv', index=False)
+#df.to_csv('csv_videos/videos_coordinates.csv', index=False)
 
 # Close all windows and release the face mesh model
 cv2.destroyAllWindows()
 face_mesh.close()
+print("Terminé!")
