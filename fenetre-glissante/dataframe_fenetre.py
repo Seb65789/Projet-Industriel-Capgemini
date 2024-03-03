@@ -12,7 +12,7 @@ from collections import deque
 
 
 def calculs_signes(list_points, frame_count, list_ear, list_ebr, list_clignement):
-    print("Je suis rentré dans la fonction\n")
+    #print("Je suis rentré dans la fonction\n")
     # les 8*3+1 premieres valeurs sont pour les coordonnées de l'oeil droit
     # toutes les 3 valeurs correspondent à un point
     # Création de la liste des EAR
@@ -36,40 +36,36 @@ def calculs_signes(list_points, frame_count, list_ear, list_ebr, list_clignement
     mouth_coord = list_points[16:24]
     head_coord = list_points[24:27]
 # ========================================================================================================================================
-    print("Liste des points fait\n")
+    #print("Liste des points fait\n")
 # Calcul des signes ======================================================================================================================
     ear_right = eye_aspect_ratio(right_eye_coord)
-    print(f"ear_right = {ear_right}")
+    #print(f"ear_right = {ear_right}")
     ear_left =  eye_aspect_ratio(left_eye_coord)
-    print(f"ear_left = {ear_left}")
+    #print(f"ear_left = {ear_left}")
     mar = mouth_aspect_ratio(mouth_coord)
-    print(f"mar = {mar}")
+    #print(f"mar = {mar}")
     hop_hb , hop_gd = hop(head_coord)
     ear_mean = (ear_right + ear_left)/2
     
     # Seuil adaptatif ===========================================================================================
-    print("Signe de fatigue calculé\n")
+    #print("Signe de fatigue calculé\n")
     # Sur la première seconde
     if compt_frame <25 :
         ear_list.append(ear_mean)
         ferme = ear_mean < 0.2
-        print(ear_list)
+        #print(ear_list)
 
     # Sur le reste du temps
     else :
         # chute de 10 %
-        print(ear_list)
+        #print(ear_list)
         ferme = ear_mean < 0.9*np.mean(ear_list)
-        print("oui")
         # On enlève le plus ancien élément
         ear_list.pop(0)
-        print("non")
         # On rajoute le nouveau
         ear_list.append(ear_mean)
-        print("ajout")
         # À chaque frame on enlève le premier élement de la liste de la premiere seconde à la fin
         list_clignement.pop(0)
-        print("pop")
 
     # ============================================================================================================
 
@@ -157,7 +153,7 @@ list_clignement = []
 # Ouverture du dataframe des résultats
 df = pd.DataFrame(columns = list_col)
 
-print(df)
+#print(df)
 
 nouvelle_ligne = []
 
@@ -196,7 +192,7 @@ while True:
             # Maintenant que nous avons nos points, nous pouvons calculer les signes et les ajouter au dataframe
             results, list_ebr, list_ear, list_clignement = calculs_signes(nouvelle_ligne, frame_count, list_ear, list_ebr, list_clignement)
             
-            print("On est sorti de la fonction calculs_signes\n")
+            #print("On est sorti de la fonction calculs_signes\n")
             
             # On ajoute nos résultats au deque les résultats
             

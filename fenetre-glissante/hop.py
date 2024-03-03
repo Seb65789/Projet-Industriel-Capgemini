@@ -4,7 +4,7 @@ def calculate_angle(x, y):
     return (-np.abs(np.arctan2(y, x) * 180/np.pi) + 180)
 
 def hop(head):
-    print("On est entré dans HOP\n")
+    #print("On est entré dans HOP\n")
     x = head[0]
     y = head[1]
     z = head[2]

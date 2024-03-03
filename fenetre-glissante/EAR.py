@@ -6,7 +6,7 @@ def eye_aspect_ratio(eye):
     :param eye: List containing positions which correspond to the eye
     :return: Eye aspect ratio value
     '''
-    print("On est rentré dans fonction-EAR\n")
+    #print("On est rentré dans fonction-EAR\n")
     N1 = distance(eye[2], eye[3])
     N2 = distance(eye[4], eye[5])
     N3 = distance(eye[6], eye[7])
