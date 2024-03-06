@@ -31,7 +31,7 @@ def calculs_signes(list_points, frame_count, list_ear, list_ebr, list_clignement
 
 # Extraction des points ==================================================================================================================
     right_eye_coord = list_points[0:8]
-    print(right_eye_coord)
+    #print(right_eye_coord)
     left_eye_coord = list_points[8:16]
     mouth_coord = list_points[16:24]
     head_coord = list_points[24:27]
