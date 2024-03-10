@@ -14,7 +14,7 @@ import joblib
 
 # Charger le modèle RandomForest========================================================================================================================================
 #model = joblib.load('modele_random_forest.pkl')
-model = joblib.load('modele_random_forest_v2.pkl')
+model = joblib.load('modele_random_forest.pkl')
 compteur_35s = 0
 
 
@@ -237,8 +237,6 @@ while True:
                 # Convertir l'image de BGR à RGB
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 cv2.imshow("Caméra", frame_rgb)
-
-  
             nouvelle_ligne = []
 
             # Rajouter ici la boucle pour changer la liste en tournant
