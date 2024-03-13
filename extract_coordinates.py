@@ -2,7 +2,6 @@ import cv2
 import mediapipe as mp
 import os
 import pandas as pd
-
 # Les points qui nous interresse
 right_eye = [33, 133, 160, 144, 159, 145, 158, 153]
 left_eye = [263, 362, 387, 373, 386, 374, 385, 380]
@@ -13,10 +12,12 @@ head = [10,152]
 list_points_no_tuples = right_eye + left_eye + mouth + head
 print(list_points_no_tuples)
 
+
 # Les vidéos à traiter
 video_paths = [f for f in os.listdir("videos") if f.endswith('.mp4')]
 video_paths = [os.path.join("videos", video) for video in video_paths]
 
+print(video_paths)
 # Declare FaceMesh model
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.5,min_tracking_confidence=0.5)
@@ -45,8 +46,10 @@ with open("videos/videos_traitees.txt", "a+") as save_video_name:
 print("Il y a", nombre_lignes, "lignes dans le fichier")
 df = 0
 
+print(len(video_paths))
 # Création du dataframe
-if not os.path.exists("~/videos_coordinates.csv"):
+if not os.path.exists("csv/videos_coordinates.csv"):
+  print("Je suis la")
   # liste des colonnes du dataframe
   liste_colonnes = ["nom_video"]
   for j in range(875) :
@@ -59,7 +62,8 @@ if not os.path.exists("~/videos_coordinates.csv"):
 
 # Si le fichier existe
 else :
-  df = pd.read_csv("videos_coordinates.csv")
+  print("J'ouvre le fichier")
+  df = pd.read_csv("csv/videos_coordinates.csv")
 
 print(df.shape)
 
@@ -71,7 +75,7 @@ videos_processed = 0
 
 # Parcourir chaque chemin de vidéo
 for video_path in video_paths:
-    
+
     # Vérifier si la vidéo a déjà été traitée
     with open("videos/videos_traitees.txt", "a+") as save_video_name:
         save_video_name.seek(0)
@@ -85,8 +89,7 @@ for video_path in video_paths:
     nouvelle_ligne = [video_path[7:]]
 
     # Ouvrir la capture vidéo
-    cap = cv2.VideoCapture('videos/3#kss#8-9#F#rldd#60-10#029.mp4')
-
+    cap = cv2.VideoCapture(video_path.strip())
     frame_count = 0  # Initialiser le compteur de frames
 
     # Traiter les frames de la vidéo
@@ -94,15 +97,15 @@ for video_path in video_paths:
         ret, frame = cap.read()
 
         # Vérifier si la frame est lue correctement
-        if (not ret) & (frame_count < 875) :
-          if (frame_count == 875) :
-            print("Video trop longue ", video_path[7:])
-            break
-          else :
-            print("Je n'arrive pas à lire la vidéo")
-            with open("videos/videos_illisibles.txt","a+") as video_non_traitée :
-                video_non_traitée.write(video_path[7:]+"\n")
-                
+        if (not ret) :
+          print("Je n'arrive pas à lire la vidéo")
+          with open("videos/videos_illisibles.txt","a+") as video_non_traitée :
+            video_non_traitée.write(video_path[7:]+"\n")
+          break
+
+        if (frame_count == 875) :
+          break
+
         # Convertir l'image en RGB pour améliorer la précision de Mediapipe
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 

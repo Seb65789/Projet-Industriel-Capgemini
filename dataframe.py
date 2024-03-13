@@ -47,7 +47,7 @@ for chunk in df_coordinates_chunks :
 
   nb_chunk +=1
 
-df["classe"] = df["nom_video"].str[3]
+df["classe"] = df["nom_video"].str[0]
 
 # Enregistrer le DataFrame dans un fichier CSV
 df.to_csv('csv/signes.csv', index=False)
