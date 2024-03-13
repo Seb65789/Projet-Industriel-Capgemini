@@ -9,6 +9,13 @@ import cv2
 import mediapipe as mp
 import os
 from collections import deque
+import joblib
+
+
+# Charger le modèle RandomForest========================================================================================================================================
+#model = joblib.load('modele_random_forest.pkl')
+model = joblib.load('modele_random_forest.pkl')
+compteur_35s = 0
 
 
 def calculs_signes(list_points, frame_count, list_ear, list_ebr, list_clignement):
@@ -145,11 +152,15 @@ for i in range(875) :
 # print(list_col)
 deque_signe = deque(maxlen=7000)
 # Création d'une liste pour pouvoir utiliser le dataframe ensuite
-np_signe = []
+noms_colonnes = []
 list_ear = []
 list_ebr = []
 list_clignement = []
 
+# Ouverture du dataframe des résultats
+df = pd.DataFrame(columns = list_col)
+
+#print(df)
 
 nouvelle_ligne = []
 
@@ -199,9 +210,33 @@ while True:
             #print(deque_signe)
 
             # On créer une liste d'après la deque
-            np_signe = list(deque_signe)
-            #print(np_signe)
-  
+            noms_colonnes = list(deque_signe)
+            #print(noms_colonnes)
+
+            # On change le dataframe ensuite selon la fenetre glissante
+            df = pd.DataFrame([noms_colonnes])
+            #print(df)
+ #Ajouter la prédiction=======================================================================================================================================
+            if len(df.columns) == 7000:
+                #compteur_35s += 1
+                df.columns = list_col[:len(noms_colonnes)]
+                prediction = model.predict(df)
+                #print("prediction",prediction)
+                #print("predictiontype",type(prediction))
+                #numpy.ndarray
+                #print("prediction [0]",prediction[0])
+                #mettre du rouge si somnolent ,bleu si c'est intermédiaire et vert si c'est alerte
+                if prediction[0]==2:
+                    cv2.putText(frame, "Somnolent", (20, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2) #Rouge 
+                elif prediction[0]==1:
+                    cv2.putText(frame, "Intermédiaire", (20, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)  #Bleu , (255, 0, 0)   #Vert(0, 255, 0), 2) 
+                else :
+                    cv2.putText(frame, "Alerte", (20, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)   #Vert   (0, 0, 255), 2) #Rouge 
+                
+                #cv2.imshow('OpenCV Feed', frame)
+                # Convertir l'image de BGR à RGB
+                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                cv2.imshow("Caméra", frame_rgb)
             nouvelle_ligne = []
 
             # Rajouter ici la boucle pour changer la liste en tournant
@@ -220,54 +255,6 @@ while True:
             break
 
 
-# # Ouverture du dataframe des coordonnées 
-# # df_coordinates = pd.read_csv("csv_videos/videos_coordinates.csv")
-
-
-
-# # Ouverture du dataframe des résultats
-# df = pd.DataFrame(columns = list_col)
-
-
-# # Parcourir les lignes
-# for ligne in range(df_coordinates.shape[0]):
-#     # Extraire le nom de la vidéo
-#     video_name = df_coordinates.iloc[ligne, 0]
-
-#     # Initialiser une liste pour stocker le nom de la vidéo et les coordonnées de cette ligne
-#     video_and_coordinates = [video_name[7:]]
-#     print(f"Processing {video_name[7:]}...")
-
-#     # On itère sur les colonnes
-#     for i in range(1, df_coordinates.shape[1], 3):
-#         # Créer une liste avec les coordonnées x, y, z du point
-#         point_coordinates = [df_coordinates.iloc[ligne, i], df_coordinates.iloc[ligne, i+1], df_coordinates.iloc[ligne, i+2]]
-        
-#         # Ajouter les coordonnées à la liste des coordonnées
-#         video_and_coordinates.append(point_coordinates)
-    
-#     # Maintenant que nous avons nos points, nous pouvons calculer les signes et les ajouter au dataframe
-#     results, list_ebr = calculs_signes(video_and_coordinates)
-    
-#     # Créez une nouvelle figure à chaque itération
-#     plt.figure()
-#     plt.plot(list_ebr)
-#     plt.title(f'Evolution des EBR pour {video_name[7:]}')
-#     plt.xlabel('Frames')
-#     plt.ylabel('Valeur EBR')
-#     plt.grid(True)
-#     plt.ylim(0, 7)
-#     # Sauvegardez le plot avec un nom de fichier unique
-#     plt.savefig(f"EBR_{video_name[7:]}.png")
-
-#     # Créer une liste avec le nom de la vidéo, les coordonnées et les résultats des signes
-#     row_data = [video_and_coordinates[0]] + results
-
-#     df.loc[len(df)] = row_data
-
-# df.to_csv('csv_videos/résultats.csv', index=False)
-# print(df)
-
 # Release resources
 cap.release()
 
@@ -275,6 +262,7 @@ cap.release()
 cv2.destroyAllWindows()
 face_mesh.close()
 
-print(np_signe)
+df.columns = list_col[:len(noms_colonnes)]
+print(df)
 
 print("Terminé !")
