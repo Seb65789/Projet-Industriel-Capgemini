@@ -11,6 +11,8 @@ import os
 from collections import deque
 import joblib  # Pour charger le modèle RandomForest
 
+#print(joblib.__version__)
+
 # Charger le modèle RandomForest========================================================================================================================================
 #model = joblib.load('modele_random_forest.pkl')
 model = joblib.load('modele_random_forest_v3.pkl')
@@ -202,12 +204,20 @@ while True:
             #print(deque_signe)
 
             # On créer une liste d'après la deque
-            np_signe = list(deque_signe)
+            #np_signe = list(deque_signe)
+            np_signe = np.array(deque_signe)
+            np_signe = np_signe.reshape(1, -1)  # Remodeler en un tableau bidimensionnel
+
             #print(np_signe)
   
             nouvelle_ligne = []
+           # Vérifier la forme de np_signe
+            #print("Forme de np_signe :", np_signe.shape)
 
-            if len(np_signe) == 7000 and frame_count % 35 == 0:
+            # Si on veut le dataframe c'est la deuxième dimension qui nous intéresse
+            #print("Taille de la deuxième dimension :", np_signe.shape[1])
+
+            if (np_signe.shape[1]) == 7000 and frame_count % 35 == 0:
                 prediction = model.predict(np_signe) 
                 if prediction[0]==2:
                     cv2.putText(frame, "Somnolent", (20, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2) #Rouge 
