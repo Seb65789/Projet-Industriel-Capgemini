@@ -218,6 +218,8 @@ while True:
             #print("Taille de la deuxième dimension :", np_signe.shape[1])
 
             if (np_signe.shape[1]) == 7000 and frame_count % 35 == 0:
+                print("shape",np_signe.shape)
+                print(np_signe)
                 prediction = model.predict(np_signe) 
                 if prediction[0]==2:
                     cv2.putText(frame, "Somnolent", (20, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2) #Rouge 
