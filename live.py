@@ -7,12 +7,8 @@ from sources import distance_euclidienne
 from sources import PERCLOS
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import cv2
 import mediapipe as mp
-import os
 from collections import deque
 
 
