@@ -1,7 +1,13 @@
-from EAR import eye_aspect_ratio
-from MAR import mouth_aspect_ratio
-from hop import hop
-from perclos import perclos
+# Importation des fichiers sources pertant le calcul des caractéristiques
+
+from sources import EAR  
+from sources import MAR
+from sources import hop
+from sources import signes
+from sources import distance_euclidienne
+from sources import PERCLOS
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
