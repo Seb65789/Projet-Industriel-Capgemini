@@ -85,6 +85,7 @@ def calculs_signes(list_points) :
 
         # Calcul de l'EBR
         ebr = np.sum(list_clignement)
+        print(list_clignement)
         list_ebr.append(ebr)
 
 #==========================================================================================================================================
@@ -103,22 +104,12 @@ def calculs_signes(list_points) :
 
     return res, list_ebr
 
-def calculs_signes_live(list_points) :
+def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clignement,eyes_state) :
     # les 8*3+1 premieres valeurs sont pour les coordonnées de l'oeil droit
     # toutes les 3 valeurs correspondent à un point
-    # Création de la liste des EAR
-    ear_list = []
-    # Pour connaitre la frame courante chaque frame
-    compt_frame = 0
+
     # Une liste pour stocker les resultats
     res = []
-    ebr = -1
-    # Compteur de yeux fermés
-    compteur_ferme = 0
-    # Compteur de yeux fermés reinitialisé toutes les 5 secondes
-    list_clignement = []
-    eyes_state = "open"
-    list_ebr = []
 
 # Extraction des points ==================================================================================================================
     right_eye_coord = list_points[:8]
@@ -140,6 +131,17 @@ def calculs_signes_live(list_points) :
     if compt_frame <25 :
         ear_list.append(ear_mean)
         ferme = ear_mean < 0.2
+        if ferme == True :
+            list_ferme.append(1)
+            list_clignement.append(1)
+            print(f"{compt_frame} j'ajoute {ferme} à list_ferme qui est de taille {len(list_ferme)}")
+            print(list_ferme)
+        else :
+            list_ferme.append(0)
+            list_clignement.append(0)
+            print(f"{compt_frame} j'ajoute {ferme} à list_ferme qui est de taille {len(list_ferme)}")
+            print(list_ferme)
+
 
     # Sur le reste du temps
     else :
@@ -156,38 +158,40 @@ def calculs_signes_live(list_points) :
 
     # Détection des clignements ================================================================================
 
-    # Si sur l'image actuel, les yeux sont considérés comme fermés alors on augmente le compteur
-    if ferme == True :
-        compteur_ferme = compteur_ferme+1
-        # si l'oeil était ouvert au début alors on compte un clignement
-        if eyes_state == "open":
-            eyes_state = "closed"
-            # On ajoute le dernier élément
-            list_clignement.append(1)
-
-        # Si l'oeil était déjà fermé on ne compte pas un clignement de plus
-        else :
-            # On ajoute le dernier élément
+        # Si sur l'image actuel, les yeux sont considérés comme fermés alors on augmente le compteur
+        if ferme:
+            list_ferme.append(1)
+            # Si l'œil était ouvert au début, alors on compte un clignement
+            if eyes_state == "open":
+                eyes_state = "closed"
+                # On ajoute un élément à la liste de clignements
+                list_clignement.append(1)
+            else:
+                # Si l'œil était déjà fermé, on ne compte pas un nouveau clignement
+                list_clignement.append(0)
+        # Si l'œil est considéré comme ouvert
+        else:
+            # Réinitialiser l'état des yeux
+            eyes_state = "open"
+            # On ajoute un élément à la liste de clignements
             list_clignement.append(0)
+            list_ferme.append(0)
 
-    # Si l'oeil est considéré comme ouvert
-    else:
-        eyes_state = "open"
-        # On ajoute le dernier élément
-        list_clignement.append(0)
-
-    # ==========================================================================================================
+        # ==========================================================================================================
 
     # Calcul du perclos
-    Perclos = PERCLOS.perclos(compteur_ferme,compt_frame+1)
+    compteur_ferme = np.sum(list_ferme)
+    print("Taille ",len(list_ferme))
+    Perclos = PERCLOS.perclos(compteur_ferme,len(list_ferme))
+
 
     # Calcul de l'EBR
-    ebr = np.sum(list_clignement)
-    list_ebr.append(ebr)
+    # Un clignement dure 3 frames donc on récupère le quotient par 3
+    print(list_clignement)
+    ebr = np.sum(list_clignement) 
+
 
 #==========================================================================================================================================
-    # On incrémente le compteur de frame
-    compt_frame += 1
 
     # On ajoute nos résultats à la liste des résultats
     res.append(ear_left)
@@ -199,4 +203,4 @@ def calculs_signes_live(list_points) :
     res.append(hop_gd)
     res.append(hop_hb)
 
-    return res, list_ebr
+    return res, ear_list, list_ferme,list_clignement,eyes_state
