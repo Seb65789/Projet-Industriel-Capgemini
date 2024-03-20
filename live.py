@@ -6,8 +6,6 @@ from sources import signes
 from sources import distance_euclidienne
 from sources import PERCLOS
 
-import sklearn
-print(sklearn.__version__)
 import cv2
 import mediapipe as mp
 from collections import deque
