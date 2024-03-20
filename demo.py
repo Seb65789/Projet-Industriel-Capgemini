@@ -1,7 +1,12 @@
-from EAR import eye_aspect_ratio
-from MAR import mouth_aspect_ratio
-from hop import hop
-from perclos import perclos
+# Importation des fichiers sources pertant le calcul des caractéristiques
+from sources import EAR  
+from sources import MAR
+from sources import hop
+from sources import signes
+from sources import distance_euclidienne
+from sources import PERCLOS
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -16,7 +21,7 @@ version = input("Entre le numéro de la version du modèle (1, 2 ou 3) :")
 
 # Charger le modèle RandomForest========================================================================================================================================
 #model = joblib.load('modele_random_forest.pkl')
-model = joblib.load(f'modele_random_fores_v{version}.pkl')
+model = joblib.load(f'modele_ml/modele_random_forest_v{version}.pkl')
 compteur_35s = 0
 
 
@@ -47,11 +52,11 @@ def calculs_signes(list_points, frame_count, list_ear, list_ebr, list_clignement
 # ========================================================================================================================================
     #print("Liste des points fait\n")
 # Calcul des signes ======================================================================================================================
-    ear_right = eye_aspect_ratio(right_eye_coord)
+    ear_right = EAR.eye_aspect_ratio(right_eye_coord)
     #print(f"ear_right = {ear_right}")
-    ear_left =  eye_aspect_ratio(left_eye_coord)
+    ear_left =  EAR.eye_aspect_ratio(left_eye_coord)
     #print(f"ear_left = {ear_left}")
-    mar = mouth_aspect_ratio(mouth_coord)
+    mar = MAR.mouth_aspect_ratio(mouth_coord)
     #print(f"mar = {mar}")
     hop_hb , hop_gd = hop(head_coord)
     ear_mean = (ear_right + ear_left)/2
@@ -101,7 +106,7 @@ def calculs_signes(list_points, frame_count, list_ear, list_ebr, list_clignement
 
     # ==========================================================================================================
     # Calcul du perclos
-    Perclos = perclos(compteur_ferme,compt_frame+1)
+    Perclos = PERCLOS.perclos(compteur_ferme,compt_frame+1)
     # Calcul de l'EBR
     ebr = np.sum(list_clignement)
     ebr_list.append(ebr)
