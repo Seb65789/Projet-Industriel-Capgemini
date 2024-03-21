@@ -26,8 +26,6 @@ def recompose(file_path, n=10):
         f.close()
 
 
-
-
 def main():
     if len(sys.argv) < 3:
         print("Usage: python splitter.py <split|recompose> <file_path>")
