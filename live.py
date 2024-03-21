@@ -40,6 +40,9 @@ cap = cv2.VideoCapture(0)
 
 frame_count = 0  # Initialize frame count
 
+# Charger le détecteur de landmarks de MediaPipe
+mp_drawing = mp.solutions.drawing_utils
+
 # Process video frames
 while True:
     ret, frame = cap.read()
@@ -57,7 +60,6 @@ while True:
     # Détecter les visages dans l'image
     faces = face_mesh.process(frame)
 
-    
     if faces.multi_face_landmarks:
         for face_landmarks in faces.multi_face_landmarks:
             landmarks_positions = []
@@ -69,6 +71,11 @@ while True:
                 point.append(data_point.y * frame.shape[0])
                 point.append(data_point.z)
                 coordonnees.append(point)
+                cv2.circle(frame, (int(data_point.x*frame.shape[1]), int(data_point.y*frame.shape[0])), 2, (0, 255, 0), -1)
+
+
+            # Afficher l'image avec les landmarks
+            cv2.imshow("MediaPipe Face Mesh", frame)
 
             # Maintenant que nous avons nos points, nous pouvons calculer les signes et les ajouter au dataframe
             results, list_ear, list_ferme,list_clignement,eyes_state = signes.calculs_signes_live(coordonnees, frame_count, list_ear,list_ferme, list_clignement,eyes_state)
@@ -108,6 +115,24 @@ while True:
             position = (50, 130)  # Position du texte dans l'image
             couleur = (0, 255, 0)  # Couleur du texte (blanc)
             cv2.putText(frame, texte, position, cv2.FONT_HERSHEY_SIMPLEX, taille_police, couleur, epaisseur)
+
+            texte = f"HOP_HB : {results[7]}"
+            position = (50, 170)  # Position du texte dans l'image
+            couleur = (255, 0, 0)  # Couleur du texte (blanc)
+            cv2.putText(frame, texte, position, cv2.FONT_HERSHEY_SIMPLEX, taille_police, couleur, epaisseur)
+
+            texte = f"HOP_GD : {results[6]}"
+            position = (50, 210)  # Position du texte dans l'image
+            couleur = (255, 0, 0)  # Couleur du texte (blanc)
+            cv2.putText(frame, texte, position, cv2.FONT_HERSHEY_SIMPLEX, taille_police, couleur, epaisseur)
+
+            texte = f"MAR : {results[3]}"
+            position = (50, 250)  # Position du texte dans l'image
+            couleur = (255, 255, 0)  # Couleur du texte (blanc)
+            cv2.putText(frame, texte, position, cv2.FONT_HERSHEY_SIMPLEX, taille_police, couleur, epaisseur)
+            
+
+
             
 
             # Afficher l'image avec le texte

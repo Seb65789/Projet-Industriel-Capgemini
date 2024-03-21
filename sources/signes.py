@@ -145,8 +145,8 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
 
     # Sur le reste du temps
     else :
-        # chute de 10 %
-        ferme = ear_mean < 0.9*np.mean(np.array(ear_list))
+        # chute de 20 %
+        ferme = ear_mean < 0.8*np.mean(np.array(ear_list))
         # On enlève le plus ancien élément
         ear_list.pop(0)
         # On rajoute le nouveau
