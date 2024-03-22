@@ -1,7 +1,7 @@
 import sys
 
 
-def split(file_path, n=10):
+def split(file_path, parts_dir="./csv_parts/", n=10):
     parts_dir = "./csv_parts/"
     with open(file_path, 'r') as f:
         data = f.read().splitlines()
@@ -14,9 +14,9 @@ def split(file_path, n=10):
         
 
 
-def recompose(file_path, n=10):
-    parts_dir = "./csv_parts/"
-    with open(file_path, 'w') as f:
+def recompose(file_path, parts_dir="./csv_parts/", out_dir="./csv/", n=10):
+    print(out_dir + file_path)
+    with open(out_dir + file_path, 'w') as f:
         for i in range(n):
             part_file = f"{file_path.split('.')[-2]}_{i}.{file_path.split('.')[-1]}"
             with open(parts_dir + part_file, 'r') as part_f:
