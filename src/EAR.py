@@ -1,4 +1,4 @@
-from sources import distance_euclidienne
+from src import distance_euclidienne
 
 def eye_aspect_ratio(eye):
     ''' Calculate the ratio of the eye length to eye width.

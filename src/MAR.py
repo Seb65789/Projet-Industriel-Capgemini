@@ -1,5 +1,5 @@
 import numpy as np
-from sources import distance_euclidienne
+from src import distance_euclidienne
 
 def mouth_aspect_ratio(mouth):
     ''' Calculate mouth feature as the ratio of the mouth length to mouth width

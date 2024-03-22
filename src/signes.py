@@ -1,8 +1,8 @@
 import numpy as np
-from sources import PERCLOS
-from sources import hop
-from sources import EAR
-from sources import MAR
+from src import PERCLOS
+from src import hop
+from src import EAR
+from src import MAR
 
 def calculs_signes(list_points) :
     # les 8*3+1 premieres valeurs sont pour les coordonnées de l'oeil droit
