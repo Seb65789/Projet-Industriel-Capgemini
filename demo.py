@@ -1,10 +1,13 @@
 # Importation des fichiers sources pertant le calcul des caractéristiques
+
 from sources import EAR  
 from sources import MAR
 from sources import hop
 from sources import signes
 from sources import distance_euclidienne
 from sources import PERCLOS
+
+
 
 
 import matplotlib.pyplot as plt
