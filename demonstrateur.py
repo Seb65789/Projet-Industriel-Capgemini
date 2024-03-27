@@ -10,7 +10,7 @@ import cv2
 import mediapipe as mp
 from collections import deque
 import joblib  # Pour charger le modèle RandomForest
-import plotly.graph_objs as go # Pour les graphiques
+
 
 
 version = input("Entre le numéro de la version du modèle (3 avec les paramètres par défaut ou 4 avec les hyperparamètres) :")

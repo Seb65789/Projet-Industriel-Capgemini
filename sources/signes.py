@@ -180,7 +180,7 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
         # ==========================================================================================================
 
     # Calcul du perclos
-    compteur_ferme = np.sum(list_ferme)
+    compteur_ferme = np.sum(list_ferme[-875:])
     print("Taille ",len(list_ferme))
     Perclos = PERCLOS.perclos(compteur_ferme,len(list_ferme))
 
