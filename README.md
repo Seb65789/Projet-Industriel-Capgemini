@@ -1,4 +1,19 @@
-# Projet-Industriel-Capgemini
+# Projet Industriel Capgemini - Guide d'Installation
+
+## Environnement
+
+Il est nécessaire de créer un environnement virtuel avec les bonnes versions de logiciels. Suivez les étapes ci-dessous pour le faire :
+
+```bash
+# Installer virtualenv
+python3 -m pip install virtualenv
+
+# Créer un nouvel environnement virtuel nommé capgemini2024
+python3 -m virtualenv capgemini2024
+
+# Activer l'environnement virtuel
+source capgemini2024/bin/activate
+```
 
 ## Branches 
   Il y a donc la branche "main" surlaquelle sera rattachée la branche "dev".
