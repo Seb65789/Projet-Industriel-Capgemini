@@ -1,6 +1,6 @@
 import numpy as np
 from src import PERCLOS
-from src import hop2
+from src import hop
 from src import EAR
 from src import MAR
 
@@ -81,10 +81,10 @@ def calculs_signes(list_points) :
         # ==========================================================================================================
 
         # Calcul du perclos
-        Perclos = PERCLOS.perclos(compteur_ferme,compt_frame+1)
+        Perclos = PERCLOS.perclos(compteur_ferme,875)
 
         # Calcul de l'EBR
-        ebr = np.sum(list_clignement)
+        ebr = np.sum(list_clignement) // 3
         print(list_clignement)
         list_ebr.append(ebr)
 
@@ -128,7 +128,7 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
     # Seuil adaptatif ===========================================================================================
 
     # Sur la première seconde
-    if compt_frame <25 :
+    if compt_frame < 25 :
         ear_list.append(ear_mean)
         ferme = ear_mean < 0.2
         if ferme == True :
@@ -180,9 +180,9 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
         # ==========================================================================================================
 
     # Calcul du perclos
-    compteur_ferme = np.sum(list_ferme[-875:])
+    compteur_ferme = np.sum(list_ferme)
     print("Taille ",len(list_ferme))
-    Perclos = PERCLOS.perclos(compteur_ferme,875)
+    Perclos = PERCLOS.perclos(compteur_ferme,len(list_ferme))
 
 
     # Calcul de l'EBR

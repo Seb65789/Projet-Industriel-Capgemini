@@ -1,7 +1,7 @@
 # Importation des fichiers sources pertant le calcul des caractéristiques
 from src import EAR  
 from src import MAR
-from src import hop2
+from src import hop
 from src import signes
 from src import distance_euclidienne
 from src import PERCLOS
