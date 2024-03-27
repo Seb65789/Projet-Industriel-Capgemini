@@ -1,6 +1,6 @@
 import numpy as np
 from src import PERCLOS
-from src import hop
+from src import hop2
 from src import EAR
 from src import MAR
 
