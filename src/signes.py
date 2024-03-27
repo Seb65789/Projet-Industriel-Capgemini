@@ -3,6 +3,7 @@ from src import PERCLOS
 from src import hop
 from src import EAR
 from src import MAR
+from src import ferme
 
 def calculs_signes(list_points) :
     # les 8*3+1 premieres valeurs sont pour les coordonnées de l'oeil droit
@@ -104,12 +105,13 @@ def calculs_signes(list_points) :
 
     return res, list_ebr
 
-def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clignement,eyes_state) :
+def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clignement,eyes_state,seuil) :
     # les 8*3+1 premieres valeurs sont pour les coordonnées de l'oeil droit
     # toutes les 3 valeurs correspondent à un point
 
     # Une liste pour stocker les resultats
     res = []
+
 
 # Extraction des points ==================================================================================================================
     right_eye_coord = list_points[:8]
@@ -127,26 +129,33 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
 
     # Seuil adaptatif ===========================================================================================
 
-    # Sur la première seconde
-    if compt_frame <25 :
+    # Sur les 10 premières secondes
+    if compt_frame <=250 :
         ear_list.append(ear_mean)
-        ferme = ear_mean < 0.2
-        if ferme == True :
+        oeil_ferme = ear_mean < 0.2
+        if oeil_ferme == True :
             list_ferme.append(1)
             list_clignement.append(1)
-            print(f"{compt_frame} j'ajoute {ferme} à list_ferme qui est de taille {len(list_ferme)}")
-            print(list_ferme)
+
         else :
             list_ferme.append(0)
             list_clignement.append(0)
-            print(f"{compt_frame} j'ajoute {ferme} à list_ferme qui est de taille {len(list_ferme)}")
-            print(list_ferme)
+
+    # Calcul du seuil
+    if(compt_frame == 250) :
+        seuil = ferme.seuil(ear_list)
+    
+
+   
 
 
     # Sur le reste du temps
     else :
-        # chute de 20 %
-        ferme = ear_mean < 0.8*np.mean(np.array(ear_list))
+        oeil_ferme = ferme.ferme(seuil,ear_mean)
+        print(ear_mean<seuil)
+        print(ear_mean)
+        print(seuil)
+        print(oeil_ferme)
         # On enlève le plus ancien élément
         ear_list.pop(0)
         # On rajoute le nouveau
@@ -181,14 +190,12 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
 
     # Calcul du perclos
     compteur_ferme = np.sum(list_ferme[-875:])
-    print("Taille ",len(list_ferme))
     Perclos = PERCLOS.perclos(compteur_ferme,875)
 
 
     # Calcul de l'EBR
     # Un clignement dure 3 frames donc on récupère le quotient par 3
-    print(list_clignement)
-    ebr = np.sum(list_clignement) 
+    ebr = np.sum(list_clignement)  // 3
 
 
 #==========================================================================================================================================
@@ -203,4 +210,4 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
     res.append(hop_gd)
     res.append(hop_hb)
 
-    return res, ear_list, list_ferme,list_clignement,eyes_state
+    return res, ear_list, list_ferme,list_clignement,eyes_state,seuil

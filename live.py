@@ -32,6 +32,8 @@ list_ear = []
 list_ebr = []
 list_ferme = []
 list_clignement = []
+seuil = 0
+
 eyes_state = "open"
 # Les coordonnées de la frame
 coordonnees = []
@@ -78,7 +80,7 @@ while True:
             cv2.imshow("MediaPipe Face Mesh", frame)
 
             # Maintenant que nous avons nos points, nous pouvons calculer les signes et les ajouter au dataframe
-            results, list_ear, list_ferme,list_clignement,eyes_state = signes.calculs_signes_live(coordonnees, frame_count, list_ear,list_ferme, list_clignement,eyes_state)
+            results, list_ear, list_ferme,list_clignement,eyes_state,seuil = signes.calculs_signes_live(coordonnees, frame_count, list_ear,list_ferme, list_clignement,eyes_state,seuil)
             
             #print("On est sorti de la fonction calculs_signes\n")
             
@@ -130,9 +132,6 @@ while True:
             position = (50, 250)  # Position du texte dans l'image
             couleur = (255, 255, 0)  # Couleur du texte (blanc)
             cv2.putText(frame, texte, position, cv2.FONT_HERSHEY_SIMPLEX, taille_police, couleur, epaisseur)
-            
-
-
             
 
             # Afficher l'image avec le texte
