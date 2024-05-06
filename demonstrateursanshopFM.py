@@ -1,11 +1,11 @@
 #demonstrateursanshop.py vrai 10/04/2024
-# Importation des fichiers sources pertant le calcul des caractéristiques
-from sources import EAR  
-from sources import MAR
-#from sources import hop
-from sources import signes
-from sources import distance_euclidienne
-from sources import PERCLOS
+# Importation des fichiers src pertant le calcul des caractéristiques
+from src import EAR  
+from src import MAR
+#from src import hop
+from src import signes
+from src import distance_euclidienne
+from src import PERCLOS
 
 import cv2
 import mediapipe as mp
@@ -216,7 +216,7 @@ while True:
             break
 
 
-# Release resources
+# Release resrc
 cap.release()
 
 # Close all windows and release the face mesh model

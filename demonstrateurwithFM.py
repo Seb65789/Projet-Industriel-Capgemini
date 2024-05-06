@@ -1,11 +1,26 @@
+# Importation des fichiers src pertant le calcul des caractéristiques
+from src import EAR  
+from src import MAR
+from src import hop
+from src import signes
+from src import distance_euclidienne
+from src import PERCLOS
+
+import cv2
+import mediapipe as mp
+from collections import deque
+import joblib  # Pour charger le modèle RandomForest
+import plotly.graph_objs as go # Pour les graphiques
+
+
 #demonstrateur.py
-# Importation des fichiers sources pertant le calcul des caractéristiques
-from sources import EAR  
-from sources import MAR
-from sources import hop
-from sources import signes
-from sources import distance_euclidienne
-from sources import PERCLOS
+# Importation des fichiers src pertant le calcul des caractéristiques
+from src import EAR  
+from src import MAR
+from src import hop
+from src import signes
+from src import distance_euclidienne
+from src import PERCLOS
 
 import cv2
 import mediapipe as mp
@@ -50,6 +65,19 @@ mp_drawing = mp.solutions.drawing_utils
 #                   xaxis_title='Nombre d\'images',
 #                   yaxis_title='Prédiction')
 
+# Créer la figure pour le graphique interactif
+fig = go.Figure()
+# Initialiser la trace pour le graphique de dispersion
+scatter_trace = go.Scatter(x=[], y=[], mode='lines+markers', name='Prédictions en fonction du nombre d\'images')
+# Ajouter le numéro de frame à la liste des valeurs sur l'axe des abscisses
+x_values = []  # Créer une liste vide pour stocker les valeurs de frame_count
+# Ajouter la trace à la figure
+fig.add_trace(scatter_trace)
+
+# Mettre à jour la mise en page de la figure
+fig.update_layout(title='Prédictions en fonction du nombre d\'images',
+                  xaxis_title='Nombre d\'images',
+                  yaxis_title='Prédiction')
 
 
 # Les points qui nous interresse
@@ -140,6 +168,7 @@ while True:
                 # Ajouter la prédiction à la liste de toutes les prédictions
                 all_predictions.append(current_prediction)
                 # Ajouter le print à la liste de logs
+                x_values.append(frame_count)
                 
 
             # Afficher la prédiction actuelle
@@ -206,21 +235,19 @@ while True:
         key = cv2.waitKey(1)
         if key == 27 or key == ord('q'):
             print("Breaking both loops because 'Esc' or 'q' is pressed.")
+            # Tracer le graphique avec toutes les prédictions jusqu'à ce moment-là
+            fig.add_trace(go.Scatter(x=x_values, y=all_predictions, mode='lines+markers', name='Prédictions en fonction du nombre d\'images'))
+            # Enregistrer la figure dans un fichier PNG
+            fig.write_image("predictions.png")
             exit_outer_loop = True  # Définir la variable de contrôle pour sortir des deux boucles
             break
         elif key != -1:
             print(f"Breaking both loops because key {key} is pressed.")
             exit_outer_loop = True  # Définir la variable de contrôle pour sortir des deux boucles
             break
-
-
 # Release resources
 cap.release()
-
 # Close all windows and release the face mesh model
 cv2.destroyAllWindows()
 face_mesh.close()
-
-
-
 print("Terminé !")
