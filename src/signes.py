@@ -104,7 +104,7 @@ def calculs_signes(list_points) :
 
     return res, list_ebr
 
-def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clignement,eyes_state) :
+def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clignement,eyes_state,list_perclos,list_ebr) :
     # les 8*3+1 premieres valeurs sont pour les coordonnées de l'oeil droit
     # toutes les 3 valeurs correspondent à un point
 
@@ -183,12 +183,14 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
     compteur_ferme = np.sum(list_ferme[-875:])
     print("Taille ",len(list_ferme))
     Perclos = PERCLOS.perclos(compteur_ferme,875)
+    list_perclos.append(Perclos)
 
 
     # Calcul de l'EBR
     # Un clignement dure 3 frames donc on récupère le quotient par 3
     print(list_clignement)
     ebr = np.sum(list_clignement) 
+    list_ebr.append(ebr)
 
 
 #==========================================================================================================================================
@@ -203,4 +205,4 @@ def calculs_signes_live(list_points,compt_frame, ear_list, list_ferme,list_clign
     res.append(hop_gd)
     res.append(hop_hb)
 
-    return res, ear_list, list_ferme,list_clignement,eyes_state
+    return res, ear_list, list_ferme,list_clignement,eyes_state,list_perclos,list_ebr

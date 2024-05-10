@@ -5,29 +5,13 @@ from src import hop
 from src import signes
 from src import distance_euclidienne
 from src import PERCLOS
+import matplotlib.pyplot as plt
 
 import cv2
 import mediapipe as mp
 from collections import deque
 import joblib  # Pour charger le modèle RandomForest
 import plotly.graph_objs as go # Pour les graphiques
-
-
-#demonstrateur.py
-# Importation des fichiers src pertant le calcul des caractéristiques
-from src import EAR  
-from src import MAR
-from src import hop
-from src import signes
-from src import distance_euclidienne
-from src import PERCLOS
-
-import cv2
-import mediapipe as mp
-from collections import deque
-import joblib  # Pour charger le modèle RandomForest
-import plotly.graph_objs as go # Pour les graphiques
-
 
 version = input("Entre le numéro de la version du modèle (3 avec les paramètres par défaut ou 4 avec les hyperparamètres) :")
 
@@ -97,6 +81,7 @@ deque_signe = deque(maxlen=7000)
 np_signe = []
 list_ear = []
 list_ebr = []
+list_perclos = []
 list_ferme = []
 list_clignement = []
 eyes_state = "open"
@@ -143,7 +128,7 @@ while True:
                 coordonnees.append(point)
 
             # Maintenant que nous avons nos points, nous pouvons calculer les signes et les ajouter au dataframe
-            results, list_ear, list_ferme,list_clignement,eyes_state = signes.calculs_signes_live(coordonnees, frame_count, list_ear,list_ferme, list_clignement,eyes_state)
+            results, list_ear, list_ferme,list_clignement,eyes_state,list_perclos,list_ebr = signes.calculs_signes_live(coordonnees, frame_count, list_ear,list_ferme, list_clignement,eyes_state,list_perclos,list_ebr)
             
             #print("On est sorti de la fonction calculs_signes\n")
             
@@ -235,10 +220,24 @@ while True:
         key = cv2.waitKey(1)
         if key == 27 or key == ord('q'):
             print("Breaking both loops because 'Esc' or 'q' is pressed.")
-            # Tracer le graphique avec toutes les prédictions jusqu'à ce moment-là
-            fig.add_trace(go.Scatter(x=x_values, y=all_predictions, mode='lines+markers', name='Prédictions en fonction du nombre d\'images'))
-            # Enregistrer la figure dans un fichier PNG
-            fig.write_image("predictions.png")
+            
+            tailles_perclos = list(range(1, len(list_perclos) + 1))
+            plt.figure()
+            plt.plot(tailles_perclos, list_perclos)
+            plt.title("Graphique du PERCLOS en fonction du temps")
+            plt.xlabel("Temps en frame")
+            plt.ylabel("PERCLOS")
+            plt.savefig('PERCLOS.png')
+            plt.ylim(0,30)
+    
+            tailles_ebr = list(range(1, len(list_ebr) + 1))
+            plt.figure()
+            plt.plot(tailles_ebr, list_ebr)
+            plt.title("Graphique de l'EBR en fonction du temps")
+            plt.xlabel("Temps en frame")
+            plt.ylabel("EBR")
+            plt.savefig('EBR.png')
+
             exit_outer_loop = True  # Définir la variable de contrôle pour sortir des deux boucles
             break
         elif key != -1:
