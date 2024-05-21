@@ -1,54 +1,34 @@
 # Projet-Industriel-Capgemini
 
-## Branches 
-  Il y a donc la branche "main" surlaquelle sera rattachée la branche "dev".
-### Branche dev
-  La branche "dev" est relié à "main", elle sert a rassembler les fichiers des autres branches qui lui sont ratachées. 
-  Sur cette branche nous rassemblerons "PERCLOS", "EAR/MAR" , "HOP" et "EBS", afin de proposer un script utilisant chacune des fonctionnalités pour construire notre projet.
-  Pour ajouter le contenue d'une branche d'une des caractéristiques à la branche "dev" il faut faire:
-  ```bash
-  git checkout dev # Se placer sur la branche dev
-  gti merge caracteristique # Ajouter son travail à la branche dev 
-  ```
+## Installation des librairies
 
-### Branche EAR/MAR
-  Ceci est la branche destinée au code pour les caractéristiques EAR/MAR.
-  Pour ajouter vos modifications au git, il faut d'abord être sur la bonne branche, en faisant :
-  ```bash
-  git checkout EAR/MAR
-  git add les_fichiers
-  git commit -m "Un message résumant bien les changements"
-  git push origin EAR/MAR
-  ```
+Pour avoir les mêmes versions que nous il faut lancer le fichier *install_requirements*
 
-### Branche HOP
-  Ceci est la branche destinée au code pour la caractéristiques HOP.
-  Pour ajouter vos modifications au git, il faut d'abord être sur la bonne branche, en faisant :
-  ```bash
-  git checkout HOP
-  git add les_fichiers
-  git commit -m "Un message résumant bien les changements"
-  git push origin HOP
-  ```
+## Extraction des coordonnées
 
-### Branche EBS
-  
-  Ceci est la branche destinée au code pour la caractéristiques EBS.
-  Pour ajouter vos modifications au git, il faut d'abord être sur la bonne branche, en faisant :
-  ```bash
-  git checkout EBS
-  git add les_fichiers
-  git commit -m "Un message résumant bien les changements"
-  git push origin EBS
-  ```
+Pour extraire les coordonnnées des vidéos il faut éxectuter le fichier *extract_coordinates.py*. 
 
-### Branche PERCLOS
+Ce fichier va ouvrir les vidéos une par une et sauvegarder les coordonnées dans un fichier csv nommé : *video_coordinates.csv* dans le dossier "csv".
 
-  Ceci est la branche destinée au code pour la caractéristiques PERCLOS.
-  Pour ajouter vos modifications au git, il faut d'abord être sur la bonne branche, en faisant :
-  ```bash
-  git checkout PERCLOS
-  git add les_fichiers
-  git commit -m "Un message résumant bien les changements"
-  git push origin PERCLOS
-  ```
+Pour éviter de traiter les vidéos plusieurs fois nous nottons les videos traitées dans un fichier *videos_traitees.txt* dans le dossier "videos".
+
+## Création du tableaux des signes de fatigues
+
+Pour créer le tableau des signes de fatigues de chacune des vidéos il faut lancer le fichier *dataframe.py* et enregistre le tableau dans le fichier *signes.py* dans le dossier *csv*
+
+Ce fichier utilise les fichiers du dossier "src", ces fichiers sont en fait les ficihers permettant de calculer les signes de fatigues.
+
+Il enregistre les graphiques des signes dans le dossier "graphics".
+
+## Utiliser le démonstrateur
+
+Pour utiliser le démonstrateur il suffit d'executer le fichier *demonstrateur.py*
+
+## Les modèles
+
+Les modèles entraînés sont dans le dossier *modele_ml*
+
+
+
+
+
