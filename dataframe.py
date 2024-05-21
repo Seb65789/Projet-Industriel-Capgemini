@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sources import signes 
+from src import signes 
 
 # Ouverture du dataframe des coordonnées par groupe de 1000
 df_coordinates_chunks = pd.read_csv("csv/videos_coordinates.csv",chunksize = 1000)
