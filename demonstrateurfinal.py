@@ -14,8 +14,13 @@ from collections import deque
 import joblib  # Pour charger le modèle RandomForest
 import plotly.graph_objs as go # Pour les graphiques
 
-version = input("Entrez le numéro de la version du modèle ( 00 avec les paramètres par défaut/précision 0.73 ou 01 avec les hyperparamètres 0.75) :")
-
+version = input(
+    "Entrez le numéro de la version du modèle :\n"
+    "  00 - Paramètres par défaut (précision 0.73)\n"
+    "  01 - Hyperparamètres ajustés (précision 0.75)\n"
+    "  02 - Modèle avec validation croisée\n"
+    "Votre choix : "
+)
 # Charger le modèle RandomForest========================================================================================================================================
 #model = joblib.load('modele_random_forest.pkl')
 model = joblib.load(f'modele_ml/modele_random_forest_v{version}.pkl')
@@ -193,11 +198,11 @@ while True:
             #print("Prédiction actuelle affichée:", current_prediction)
             if current_prediction is not None:
                 if current_prediction == 3:
-                    cv2.putText(frame, "Somnolent !", (50, 170), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)  # Rouge
+                    cv2.putText(frame, "Niveau de somnolence : Somnolent !", (50, 170), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)  # Rouge
                 elif current_prediction == 2:
-                    cv2.putText(frame, "Intermediaire", (50, 170), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)  # Bleu
+                    cv2.putText(frame, "Niveau de somnolence : Intermediaire", (50, 170), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)  # Bleu
                 else:
-                    cv2.putText(frame, "Alerte", (50, 170), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)  # Vert (0, 255, 0)
+                    cv2.putText(frame, "Niveau de somnolence : Alerte", (50, 170), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)  # Vert (0, 255, 0)
                    
           
             coordonnees = []
@@ -228,7 +233,7 @@ while True:
             # Convertir l'image de BGR à RGB
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # Afficher l'image avec le texte
-            cv2.imshow('Affichage du texte', frame)
+            cv2.imshow('Detecteur de la somnolence au volant', frame)
         
         # Enregistrer la trame dans la vidéo de sortie
         out.write(frame)
